@@ -23,7 +23,7 @@ void combinationSumHelper(vector<int> &candidates, int n, int target, vector<int
 
         return;
     }
-    cout<<target<<endl;
+    // cout<<target<<endl;
     // every element has two option to be included ot nor
 
 if (candidates[n]<=target)
