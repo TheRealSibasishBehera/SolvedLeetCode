@@ -1,30 +1,25 @@
 class Solution {
 public:
-vector<vector<int>> final;
-vector<vector<int>> combinationSum3(int k, int n)
-{
-    vector<int> temp;
-    helper(k,n,1,temp);
-    return final;
-}
-void helper(int k, int n, int i, vector<int> temp)
-{
-    if (i > 10)
-    {
-        return;
-    }
-    if (k == 0 && n == 0)
-    {
-        final.push_back(temp);
-        return;
+    void generateCombos(int idx, int k, int n, vector<int>& temp, vector<vector<int>>& sol){
+        if(!k||!n){
+            if(!k&&!n) sol.push_back(temp);
+            return;
+        }
+
+        for(int i=idx;i<=9;i++){
+            if(n<i) return;
+            
+            temp.push_back(i);
+            generateCombos(i+1, k-1, n-i, temp, sol);
+            temp.pop_back();
+        }
     }
 
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<int> temp;
+        vector<vector<int>> sol;
 
-    // cout<<"p:"<<i<<endl;
-    helper(k, n, i + 1, temp);
-    
-    temp.push_back(i);
-    helper(k - 1, n - i, i + 1, temp);
-    
-}
+        generateCombos(1, k, n, temp, sol);
+        return sol;
+    }
 };
