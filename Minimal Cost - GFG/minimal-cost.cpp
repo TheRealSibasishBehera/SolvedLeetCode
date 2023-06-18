@@ -35,9 +35,29 @@ int helper(vector<int> &height, int n, int k, vector<int> &dp)
 }
 int minimizeCost(vector<int> &height, int n, int k)
 {
-    vector<int> dp(n, -1);
+    // vector<int> dp(n, -1);
 
-    return helper(height, n - 1, k, dp);
+    // return helper(height, n - 1, k, dp);
+        vector<int> dp(n, -1);
+    dp[0] = 0;
+    // dp[1] = abs(height[0] - height[1]);
+    for (int i = 1; i < n; i++)
+    {
+        int mini = INT_MAX;
+        for (int j = 1; j <= k; j++)
+        {
+            // cout<<"hello"<<endl;
+            if (i - j >= 0)
+            {
+                int jump = dp[i-j] + abs(height[i] - height[i - j]);
+                mini = min(mini, jump);
+                // cout<<mini<<":"<<n-i<<":"<<jump<<endl;
+            }
+            dp[i]= mini;
+        }
+    }
+
+    return dp[n-1];
 }
 };
 
