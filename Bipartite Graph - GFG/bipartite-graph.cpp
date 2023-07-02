@@ -21,7 +21,7 @@ bool isBipartite(int V, vector<int> adj[])
     {
         if (vis[i] == -1)
         {
-            if (!check(i, adj, vis))
+            if (!dfs(i,0,adj, vis))
                 return false;
         }
     }
@@ -29,36 +29,22 @@ bool isBipartite(int V, vector<int> adj[])
     return true;
 }
 
-bool check(int V, vector<int> adj[], int vis[])
+bool dfs(int V,int col, vector<int> adj[], int vis[])
 {
-    queue<int> q;
-    q.push(V);
-    int col = 1;
-    vis[V] = col;
-    // bfs(0, -1, col,adj, vis, q);
-    // vis[node] = 1;
-
-    while (!q.empty())
-    {
-
-        int x = q.front();
-        q.pop();
-        int parCOl = vis[x];
-        // ans.push_back(x);
-        for (auto it : adj[x])
+        vis[V]=col;
+        for (auto it : adj[V])
         {
             // indegree[it] -= 1;
             if (vis[it] == -1)
             {
-                q.push(it);
-                vis[it] = !parCOl;
+                if(!dfs(it,!col,adj,vis)) {return false;}
             }
-            else if (vis[it] == parCOl)
+            else if (vis[it] == col)
             {
                 return false;
             }
         }
-    }
+    
 
     return true;
 }
