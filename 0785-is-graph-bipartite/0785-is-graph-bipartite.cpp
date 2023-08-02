@@ -3,7 +3,7 @@ using namespace std;
 class Solution {
 public:
     bool dfs(int clr,int i ,vector<vector<int>>& graph,vector<int> &color){
-        cout<<i<<" "<<clr<<endl;
+        // cout<<i<<" "<<clr<<endl;
         color[i]=clr;
         for(auto adj:graph[i]){
             if(color[adj]==-1) {if(!dfs(!clr,adj,graph,color)){return false;}}
