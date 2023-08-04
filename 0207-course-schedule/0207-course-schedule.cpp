@@ -9,18 +9,18 @@ public:
     for (int i = 0; i < prerequisites.size(); i++)
     {
         adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
-         // indeg[prerequisites[i][0]]++;
+         indeg[prerequisites[i][0]]++;
     }
 
 
-    for (int i = 0; i < nodes; i++)
-    {
+//     for (int i = 0; i < nodes; i++)
+//     {
 
-        for (auto it : adj[i])
-        {
-            indeg[it]++;
-        }
-    }
+//         for (auto it : adj[i])
+//         {
+//             indeg[it]++;
+//         }
+//     }
 
 
 queue<int> q;
