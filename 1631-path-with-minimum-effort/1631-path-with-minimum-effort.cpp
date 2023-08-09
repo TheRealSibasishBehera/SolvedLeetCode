@@ -17,9 +17,6 @@ public:
             int y = pq.top().second.second;
             int dis = pq.top().first;
 
-            if (x == rows - 1 && y == cols - 1)
-                return dis;
-
             pq.pop();
 
             for (int i = 0; i < 4; i++) {
@@ -27,7 +24,7 @@ public:
                 int ny = y + delcol[i];
 
                 if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-                    int new_effort = max(dis, abs(heights[nx][ny] - heights[x][y])); //IMP , PATHS NEW EFOOR IS MAX OF (,) NOT JUST THE ABS DIFF 
+                    int new_effort = max(dis, abs(heights[nx][ny] - heights[x][y]));
 
                     if (dist[nx][ny] > new_effort) {
                         dist[nx][ny] = new_effort;
@@ -37,6 +34,6 @@ public:
             }
         }
 
-        return 0;
+        return dist[rows - 1][cols - 1]; // Return the minimum effort at the destination cell
     }
 };
