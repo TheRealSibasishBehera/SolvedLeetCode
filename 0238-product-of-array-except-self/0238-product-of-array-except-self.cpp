@@ -11,13 +11,13 @@ vector<int> productExceptSelf(vector<int> &nums)
     
     
     int suffix = 1;
-    vector<int> ans(n);
+    // vector<int> ans(n);
     for(int i = n-1;i>=0;i--){
-        ans[i]=suffix*prefix[i];
+        prefix[i]=suffix*prefix[i];
         suffix=suffix*nums[i];
     }
     
-    return ans;
+    return prefix;
     
     
 }
