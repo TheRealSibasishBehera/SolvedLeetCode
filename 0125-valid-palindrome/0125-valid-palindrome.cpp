@@ -2,34 +2,30 @@ class Solution {
 public:
 bool isPalindrome(string s)
 {
-    string ans="";
-    for (auto ch : s)
+    int l = 0;
+    int r = s.size() - 1;
+    while (l <= r)
     {
-        if(ch>='a' &&  ch<='z'){
-            ans+=ch;
-        }
-        if (ch >= 'A' && ch <= 'Z')
+        if (!isalnum(s[l]))
         {
-            ans+=ch+('a'-'A');
+            l++;
+            continue;
         }
-                if (ch >= '0' && ch <= '9')
+        else if (!isalnum(s[r]))
         {
-            ans+=ch;
+            r--;
+            continue;
         }
-    }
-    // cout<<ans<<endl;
-    // if(ans.size()==0) return true;
-    int i = 0;
-    int j = ans.size() - 1;
-    while(i<=j){
-        if(ans[i]!=ans[j]){
+        else if (tolower(s[l]) != tolower(s[r]))
+        {
             return false;
         }
-        i++;
-        j--;
+        else
+        {
+            l++;
+            r--;
+        }   
     }
-
     return true;
-    
 }
 };
