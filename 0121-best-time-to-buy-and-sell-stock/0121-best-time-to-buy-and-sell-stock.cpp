@@ -2,24 +2,20 @@ class Solution {
 public:
 int maxProfit(vector<int> &prices)
 {
-    // here is basic sliding window theory
-    // we need to find the max diffrence between the elements
-    //  7 1 5 3 6 4
-    int l = 0;
-    int r = 1;
     int n = prices.size();
-    int ans = 0;
-    while (r < n)
+    //try to max diffrence 
+    int min_price = INT_MAX;
+    int ans=0;
+    for (int i = 0; i < n; i++)
     {
-        int val = prices[r] - prices[l];
-        ans = max(ans, val);
-        if (prices[l] > prices[r])
-        {
-            l = r;
+        int diff= prices[i]-min_price;
+        ans=max(ans,diff);
+        if(diff<0) {
+            min_price=prices[i];
         }
-        r++;
     }
 
     return ans;
+    
 }
 };
