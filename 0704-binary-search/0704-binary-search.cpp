@@ -2,17 +2,11 @@ class Solution {
 public:
 int search(vector<int> &nums, int target)
 {
-    int l = 0;
-    int r = nums.size() - 1;
-    int middle;
-    //
-    while(l<=r){
-        middle=l+(r-l)/2;
-        if(nums[middle]==target) return middle;
-        else if(nums[middle]>target) r=middle-1;
-        else l=middle+1;
-    }
-
-    return -1;
+    auto start= lower_bound(nums.begin(),nums.end(),target);
+    if(start==nums.end()) return -1;
+    int index = start - nums.begin();
+    // if(nums)
+    if(nums[index]!=target) return -1;
+    else return index;
 }
 };
