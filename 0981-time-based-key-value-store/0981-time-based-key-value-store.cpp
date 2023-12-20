@@ -1,58 +1,53 @@
-#include <unordered_map>
-#include <vector>
+/*
+    Design time-based key-value structure, multiple vals at diff times
 
-class TimeMap
-{
-    // one string as key, a vector of pair of int and string
-    std::unordered_map<std::string, std::vector<std::pair<int, std::string>>> mp;
+    Hash map, since timestamps are naturally in order, binary search
 
+    Time: O(log n)
+    Space: O(n)
+*/
+
+class TimeMap {
 public:
-    TimeMap() {}
-
-    void set(std::string key, std::string value, int timestamp)
-    {
-        mp[key].push_back({timestamp, value});
+    TimeMap() {
+        
     }
-
-    std::string get(std::string key, int timestamp)
-    {
-        if (mp.find(key) == mp.end())
-        {
+    
+    void set(string key, string value, int timestamp) {
+        m[key].push_back({timestamp, value});
+    }
+    
+    string get(string key, int timestamp) {
+        if (m.find(key) == m.end()) {
             return "";
         }
-
-        const std::vector<std::pair<int, std::string>> &v = mp[key];
-
-        int l = 0;
-        int r = v.size() - 1;
-        int ans = -1;
-
-        while (l <= r)
-        {
-            int middle = l + (r - l) / 2;
-
-            if (v[middle].first == timestamp)
-            {
-                return v[middle].second;
-            }
-            else if (v[middle].first > timestamp)
-            {
-                r = middle - 1;
-            }
-            else
-            {
-                ans = middle;
-                l = middle + 1;
+        
+        int low = 0;
+        int high = m[key].size() - 1;
+        
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (m[key][mid].first < timestamp) {
+                low = mid + 1;
+            } else if (m[key][mid].first > timestamp) {
+                high = mid - 1;
+            } else {
+                return m[key][mid].second;
             }
         }
-
-        if (ans == -1)
-        {
-            return "";
+        
+        if (high >= 0) {
+            return m[key][high].second;
         }
-        else
-        {
-            return v[ans].second;
-        }
+        return "";
     }
+private:
+    unordered_map<string, vector<pair<int, string>>> m;
 };
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap* obj = new TimeMap();
+ * obj->set(key,value,timestamp);
+ * string param_2 = obj->get(key,timestamp);
+ */
