@@ -24,8 +24,6 @@ vector<int> rightSideView(TreeNode *root)
         int count = q.size();
         vector<int> x;
 
-        // instead of keeping level , u run a for loop at the size
-        // 0 , then 2 , 4  so on
         for (int i = 0; i < count; i++)
         {
             TreeNode *curr = q.front();
@@ -36,7 +34,6 @@ vector<int> rightSideView(TreeNode *root)
             if (curr->right)
                 q.push(curr->right);
         }
-        // ans.push_back(x);
     }
     return ans;
 }
