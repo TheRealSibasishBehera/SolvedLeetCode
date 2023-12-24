@@ -12,17 +12,22 @@ class Solution {
 public:
 TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
 {
-    int x = p->val;
-    int y = q->val;
-    int z = root->val;
-    // find a node such that , one is greater than and one is smaller
+    while (root)
+    {
+        int x = p->val;
+        int y = q->val;
+        int z = root->val;
 
-    if (z > y && z > x)
-        return lowestCommonAncestor(root->left, p, q);
+        if (z > y && z > x)
+            root = root->left;
 
-    else if (z < y && z < x)
-        return lowestCommonAncestor(root->right, p, q);
+        else if (z < y && z < x)
+            root = root->right;
 
-    return root;
+        else
+            return root;
+    }
+
+    return nullptr; // If no common ancestor is found
 }
 };
