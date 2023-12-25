@@ -1,38 +1,36 @@
 class Solution {
 public:
-        vector<vector<int>> final;
 
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        
-           vector<int> temp;
-    combinationSumHelper(candidates, 0, target, temp);
-        return final;
-    }
-void combinationSumHelper(vector<int> &candidates, int n, int target, vector<int> &temp)
+vector<vector<int>> ans; // Assuming this is declared somewhere in your code
+
+void helper(vector<int> &nums, int index, vector<int> &temp, int target)
 {
-    // cout<<candidates.size()-1<<endl;
-    if (n == candidates.size())
+    if (target == 0)
     {
-        if (target == 0)
-        {
-            // cout<<"hello"<<endl;
-            // for (int i = 0; i < temp.size(); i++)
-            //     {cout << temp.at(i);}
-            final.push_back(temp);
-        }
-
+        ans.push_back(temp);
         return;
     }
-    // cout<<target<<endl;
-    // every element has two option to be included ot nor
 
-if (candidates[n]<=target)
-{
-    temp.push_back(candidates[n]);
-    combinationSumHelper(candidates, n, target - candidates[n], temp);
+    if (index == nums.size() || target < 0)
+    {
+        return;
+    }
+
+    temp.push_back(nums[index]);
+    helper(nums, index, temp, target - nums[index]);
     temp.pop_back();
-}
-    combinationSumHelper(candidates, n + 1, target, temp);
+    helper(nums, index + 1, temp, target);
+
     return;
 }
+
+vector<vector<int>> combinationSum(vector<int> &a, int target)
+{
+    vector<int> temp;
+    helper(a, 0, temp, target);
+
+    return ans;
+}
+
+
 };
