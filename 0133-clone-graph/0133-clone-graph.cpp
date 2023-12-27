@@ -1,4 +1,13 @@
 /*
+    Given ref of a node in connected undirected graph, return deep copy
+
+    Both BFS & DFS work, map original node to its copy
+
+    Time: O(m + n)
+    Space: O(n)
+*/
+
+/*
 // Definition for a Node.
 class Node {
 public:
@@ -19,39 +28,56 @@ public:
 };
 */
 
+// class Solution {
+// public:
+//     Node* cloneGraph(Node* node) {
+//         if (node == NULL) {
+//             return NULL;
+//         } 
+//         if (m.find(node) == m.end()) {
+//             m[node] = new Node(node->val);
+//             for (int i = 0; i < node->neighbors.size(); i++) {
+//                 Node* neighbor = node->neighbors[i];
+//                 m[node]->neighbors.push_back(cloneGraph(neighbor));
+//             }
+//         }
+//         return m[node];
+//     }
+// private:
+//     unordered_map<Node*, Node*> m;
+// };
+
 class Solution {
 public:
-    unordered_map<Node *, Node *> mpp;
-
-    void helper(Node *node)
-    {
-
-        //i could not think this
-        if (!node || mpp.find(node) != mpp.end())
-        {
-            return; // base condition or already visited
+    Node* cloneGraph(Node* node) {
+        if (node == NULL) {
+            return NULL;
         }
-
-        Node *newp = new Node(node->val);
-        mpp[node] = newp; 
-
-        // make neighbors
-        for (auto newc : node->neighbors)
-        {
-            helper(newc);
-            newp->neighbors.push_back(mpp[newc]);
+        
+        Node* copy = new Node(node->val);
+        m[node] = copy;
+        
+        queue<Node*> q;
+        q.push(node);
+        
+        while (!q.empty()) {
+            Node* curr = q.front();
+            q.pop();
+            
+            for (int i = 0; i < curr->neighbors.size(); i++) {
+                Node* neighbor = curr->neighbors[i];
+                
+                if (m.find(neighbor) == m.end()) {
+                    m[neighbor] = new Node(neighbor->val);
+                    q.push(neighbor);
+                }
+                
+                m[curr]->neighbors.push_back(m[neighbor]);
+            }
         }
+        
+        return copy;
     }
-
-    Node* cloneGraph(Node *node)
-    {
-        if (!node)
-        {
-            return nullptr; // handle edge case when the input graph is empty
-        }
-
-        // initiate the DFS cloning
-        helper(node);
-        return mpp[node];
-    }
+private:
+    unordered_map<Node*, Node*> m;
 };
