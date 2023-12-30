@@ -1,51 +1,53 @@
 class Solution {
+private:
+    //same cide 
+    int find_parent(vector<int>& parent, int u) {
+        if (parent[u] == u) 
+            return u;
+        return parent[u] = find_parent(parent, parent[u]);
+    }
+
+    //kind of same
+    void union_by_rank(vector<int>& parent, vector<int>& rank, int u, int v) {
+        if (rank[u] < rank[v])
+            swap(u, v);
+
+        int pu = find_parent(parent, u);
+        int pv = find_parent(parent, v);
+
+        rank[u] += rank[v];
+
+        parent[pv] = pu;
+    }
+    
 public:
-vector<int> findRedundantConnection(vector<vector<int>> &edges)
-{
-    vector<int> rank(1001, -1);
-    vector<int> parent(1001, -1); // Initialize with -1
-    for (int i = 0; i < edges.size(); i++)
-    {
-        int a = edges[i][0];
-        int b = edges[i][1];
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        
+        int n = edges.size();
+        
+        vector<int> parent(n+1);
+        vector<int> rank(n+1, 1);
+        
+        
+        //init parent with itself
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
 
-        if (!union_nodes(a, b, rank, parent))
-            return {a, b};
+        
+        //generic
+        for (auto& edge: edges) {
+            int u = edge[0];
+            int v = edge[1];
+            
+            //if parent is same its the ans;
+            if (find_parent(parent, u) == find_parent(parent, v)) {
+                return vector<int>{u, v};
+            } else {
+                union_by_rank(parent, rank, u, v);
+            }
+        }
+        return vector<int>();
     }
-
-    return {};
-}
-
-int find_par(int x, vector<int> &parent)
-{
-    if (parent[x] == -1)
-        return x;
-    else
-        return find_par(parent[x], parent);
-}
-
-bool union_nodes(int a, int b, vector<int> &rank, vector<int> &parent)
-{
-    // Base case: if same parent, it will be a redundant connection
-    int parA = find_par(a, parent);
-    int parB = find_par(b, parent);
-    if (parA == parB)
-        return false;
-
-    // Union by rank
-    if (rank[parA] > rank[parB])
-    {
-        // Merge b to a
-        parent[parB] = parA;
-        rank[parA] += rank[parB];
-    }
-    else
-    {
-        parent[parA] = parB;
-        rank[parB] += rank[parA];
-    }
-
-    return true;
-}
-
+        
 };
