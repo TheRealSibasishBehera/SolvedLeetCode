@@ -1,21 +1,19 @@
 class Solution {
 public:
 
-void dfs(vector<vector<int>> &h, int i, int j, int m, int n, vector<vector<bool>> &can_reach, int pasth, bool isPacific)
+void dfs(vector<vector<int>> &h, int i, int j, int m, int n, vector<vector<bool>> &can_reach, vector<vector<bool>> &vis, int pasth)
 {
     // base
-    if (i < 0 || j < 0 || i >= m || j >= n)
+    if (i < 0 || j < 0 || i >= m || j >= n || vis[i][j] || h[i][j] < pasth)
         return;
 
-    if (h[i][j] < pasth || can_reach[i][j])
-        return;
-
+    vis[i][j] = true;
     can_reach[i][j] = true;
 
-    dfs(h, i + 1, j, m, n, can_reach, h[i][j], isPacific);
-    dfs(h, i - 1, j, m, n, can_reach, h[i][j], isPacific);
-    dfs(h, i, j - 1, m, n, can_reach, h[i][j], isPacific);
-    dfs(h, i, j + 1, m, n, can_reach, h[i][j], isPacific);
+    dfs(h, i + 1, j, m, n, can_reach, vis, h[i][j]);
+    dfs(h, i - 1, j, m, n, can_reach, vis, h[i][j]);
+    dfs(h, i, j - 1, m, n, can_reach, vis, h[i][j]);
+    dfs(h, i, j + 1, m, n, can_reach, vis, h[i][j]);
 }
 
 vector<vector<int>> pacificAtlantic(vector<vector<int>> &heights)
@@ -31,17 +29,19 @@ vector<vector<int>> pacificAtlantic(vector<vector<int>> &heights)
     vector<vector<int>> ans;
     vector<vector<bool>> can_reach_pac(m, vector<bool>(n, false));
     vector<vector<bool>> can_reach_at(m, vector<bool>(n, false));
+    vector<vector<bool>> vis_pac(m, vector<bool>(n, false));
+    vector<vector<bool>> vis_at(m, vector<bool>(n, false));
 
     for (int i = 0; i < m; i++)
     {
-        dfs(heights, i, 0, m, n, can_reach_pac, INT_MIN, true);
-        dfs(heights, i, n - 1, m, n, can_reach_at, INT_MIN, false);
+        dfs(heights, i, 0, m, n, can_reach_pac, vis_pac, 0);
+        dfs(heights, i, n - 1, m, n, can_reach_at, vis_at, 0);
     }
 
     for (int j = 0; j < n; j++)
     {
-        dfs(heights, 0, j, m, n, can_reach_pac, INT_MIN, true);
-        dfs(heights, m - 1, j, m, n, can_reach_at, INT_MIN, false);
+        dfs(heights, 0, j, m, n, can_reach_pac, vis_pac, 0);
+        dfs(heights, m - 1, j, m, n, can_reach_at, vis_at, 0);
     }
 
     for (int i = 0; i < m; i++)
@@ -57,5 +57,4 @@ vector<vector<int>> pacificAtlantic(vector<vector<int>> &heights)
 
     return ans;
 }
-
 };
