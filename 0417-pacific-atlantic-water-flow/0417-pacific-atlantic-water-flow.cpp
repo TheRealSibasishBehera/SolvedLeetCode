@@ -1,36 +1,21 @@
 class Solution {
 public:
-void atlantic(vector<vector<int>> &h, int i, int j, int m, int n, vector<vector<bool>> &can_reach_at, int pasth)
+
+void dfs(vector<vector<int>> &h, int i, int j, int m, int n, vector<vector<bool>> &can_reach, int pasth, bool isPacific)
 {
     // base
     if (i < 0 || j < 0 || i >= m || j >= n)
         return;
 
-    if (h[i][j] < pasth || can_reach_at[i][j])
+    if (h[i][j] < pasth || can_reach[i][j])
         return;
 
-    can_reach_at[i][j] = true;
-    atlantic(h, i + 1, j, m, n, can_reach_at, h[i][j]);
-    atlantic(h, i - 1, j, m, n, can_reach_at, h[i][j]);
-    atlantic(h, i, j - 1, m, n, can_reach_at, h[i][j]);
-    atlantic(h, i, j + 1, m, n, can_reach_at, h[i][j]);
-}
+    can_reach[i][j] = true;
 
-void pacific(vector<vector<int>> &h, int i, int j, int m, int n, vector<vector<bool>> &can_reach_pac, int pasth)
-{
-    // base
-    if (i < 0 || j < 0 || i >= m || j >= n)
-        return;
-
-    if (h[i][j] < pasth || can_reach_pac[i][j])
-        return;
-
-    can_reach_pac[i][j] = true;
-
-    pacific(h, i + 1, j, m, n, can_reach_pac, h[i][j]);
-    pacific(h, i - 1, j, m, n, can_reach_pac, h[i][j]);
-    pacific(h, i, j - 1, m, n, can_reach_pac, h[i][j]);
-    pacific(h, i, j + 1, m, n, can_reach_pac, h[i][j]);
+    dfs(h, i + 1, j, m, n, can_reach, h[i][j], isPacific);
+    dfs(h, i - 1, j, m, n, can_reach, h[i][j], isPacific);
+    dfs(h, i, j - 1, m, n, can_reach, h[i][j], isPacific);
+    dfs(h, i, j + 1, m, n, can_reach, h[i][j], isPacific);
 }
 
 vector<vector<int>> pacificAtlantic(vector<vector<int>> &heights)
@@ -49,14 +34,14 @@ vector<vector<int>> pacificAtlantic(vector<vector<int>> &heights)
 
     for (int i = 0; i < m; i++)
     {
-        pacific(heights, i, 0, m, n, can_reach_pac, INT_MIN);
-        atlantic(heights, i, n - 1, m, n, can_reach_at, INT_MIN);
+        dfs(heights, i, 0, m, n, can_reach_pac, INT_MIN, true);
+        dfs(heights, i, n - 1, m, n, can_reach_at, INT_MIN, false);
     }
 
     for (int j = 0; j < n; j++)
     {
-        pacific(heights, 0, j, m, n, can_reach_pac, INT_MIN);
-        atlantic(heights, m - 1, j, m, n, can_reach_at, INT_MIN);
+        dfs(heights, 0, j, m, n, can_reach_pac, INT_MIN, true);
+        dfs(heights, m - 1, j, m, n, can_reach_at, INT_MIN, false);
     }
 
     for (int i = 0; i < m; i++)
