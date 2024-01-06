@@ -1,19 +1,20 @@
 class Solution
 {
 public:
-    int helper(int n, vector<int> &v)
-    {
-        if (n <= 1)
-            return v[n] = 1;
-
-        if (v[n] != -1)
-            return v[n];
-        return v[n] = helper(n - 1, v) + helper(n - 2, v);
-    }
     int climbStairs(int n)
     {
-        vector<int> v(n + 1 ,-1);
+        int prev = 0;
+        int prev2 = 1;
+        int curr = 0;
+        // iterative soln
+        for (int i = 1; i <= n; i++)
+        {
 
-        return helper(n, v);
+            curr = prev + prev2;
+            prev = prev2;
+            prev2 = curr;
+            
+        }
+        return curr;
     }
 };
