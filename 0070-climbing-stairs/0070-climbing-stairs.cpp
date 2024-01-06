@@ -1,17 +1,19 @@
-class Solution {
+class Solution
+{
 public:
-    int climbStairs(int n) {
-        if(n==1){return 1;}
-        if(n==0){return 1;}
-    int prev = 1;
-    int next = 1;
-    int val;
-    for (int i = 2; i <= n; i++)
+    int helper(int n, vector<int> &v)
     {
-        val = prev + next;
-        prev = next;
-        next = val;
+        if (n <= 1)
+            return v[n] = 1;
+
+        if (v[n] != -1)
+            return v[n];
+        return v[n] = helper(n - 1, v) + helper(n - 2, v);
     }
-    return val;}
-    
+    int climbStairs(int n)
+    {
+        vector<int> v(n + 1 ,-1);
+
+        return helper(n, v);
+    }
 };
