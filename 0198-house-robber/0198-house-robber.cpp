@@ -1,22 +1,34 @@
-
 class Solution
 {
 public:
-    int rob(vector<int> &nums)
-    {
-        int n = nums.size();
-        vector<int> dp(n + 1, -1);
+int rob(vector<int> &nums)
+{
+    int n = nums.size();
 
-        dp[0] = nums[0];
-        for (int i = 1; i < n; i++)
-        {
-            int x = nums[i], y = INT_MIN;
-            if (i - 2 >= 0)
-                x += dp[i - 2];
-            y = dp[i - 1];
-            dp[i] = max(x, y);
-        }
-
-        return dp[n - 1];
+    if (n == 0) {
+        return 0; // No houses to rob
     }
+
+    if (n == 1) {
+        return nums[0]; // Only one house, so rob it
+    }
+
+    int prev = 0;
+    int prev2 = nums[0];
+    int curr = 0;
+    
+    for (int i = 1; i < n; i++)
+    {
+        int x = nums[i] + prev;
+        int y = prev2;
+        curr = max(x, y);
+
+        prev = prev2;
+        prev2 = curr;
+    }
+
+    return curr;
+}
+
+
 };
