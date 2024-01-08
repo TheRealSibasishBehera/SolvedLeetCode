@@ -1,24 +1,31 @@
 class Solution
 {
 public:
-    bool wordBreak(string s, vector<string> &wordDict)
+    bool helper(int i, string s, vector<string> &wordDict, vector<bool> &dp)
     {
-        int n = s.length();
-        vector<int> dp(n + 1, 0);
-        dp[0] = 1; // Empty string is always a valid word break
+        if (i == s.length())
+            return true;
 
-        for (int i = 1; i <= n; ++i)
+        if (dp[i])
+            return false;
+
+        for (const string &word : wordDict)
         {
-            for (string word : wordDict)
+            int l = word.size();
+            if (i + l <= s.length() && s.substr(i, l) == word)
             {
-                int len = word.length();
-                if (i >= len && s.substr(i - len, len) == word)
-                {
-                    dp[i] = dp[i] || dp[i - len];
-                }
+                if (helper(i + l, s, wordDict, dp))
+                    return true;
             }
         }
 
-        return dp[n];
+        dp[i] = true;
+        return false;
+    }
+
+    bool wordBreak(string s, vector<string> &wordDict)
+    {
+        vector<bool> dp(s.size());
+        return helper(0, s, wordDict, dp);
     }
 };
