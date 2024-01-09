@@ -1,38 +1,26 @@
-class Solution {
-public:
- int lengthOfLongestSubstring(string s)
+class Solution
 {
-    int ans = 1;
-    if (s.length() == 0)
-        return 0;
-    int l = 0;
-    int r = 0;
-    int maxi = INT_MIN;
-
-    int curr = 0;
-
-    unordered_set<char> st;
-    while (r < s.length())
+public:
+    int lengthOfLongestSubstring(string s)
     {
-        if (st.find(s[r]) == st.end())
+        if (s.size() == 0) return 0;
+        int start = 0;
+        int n = s.size();
+        int maxi = INT_MIN;
+        unordered_map<char, int> sete;  // Use unordered_map to store characters and their indices
+        for (int i = 0; i < n; i++)
         {
-            // implies element is not present
-            st.insert(s[r]);
-        }
-        else{
-            // element is present
-            while (st.find(s[r]) != st.end())
+            if (sete.find(s[i]) != sete.end())
             {
-                st.erase(s[l]);
-                l++;
+                maxi = max(maxi, i - start);
+                start = max(start, sete[s[i]] + 1);
             }
-            st.insert(s[r]);
+            sete[s[i]] = i;  // Store character and its index in the map
         }
-        maxi = max(maxi, r - l + 1);
-        r++;
-        
-    }
 
-    return maxi;
-}
+        // Check for the last substring
+        maxi = max(maxi, n - start);
+
+        return maxi;
+    }
 };
