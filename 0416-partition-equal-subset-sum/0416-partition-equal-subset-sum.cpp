@@ -1,48 +1,55 @@
-class Solution {
+class Solution
+{
 public:
-bool canPartition(vector<int> &nums)
-{
-    int n = nums.size();
-    int sum=0;
-    for (int i = 0; i < n; i++)
+    bool helper(int target, vector<int> &nums, int index, vector<vector<int>> &dp)
     {
-        sum +=nums[i];
-    }
-    if(sum%2!=0) return false;
-    return isSubsetSum(nums,sum/2);
-    
-}
-bool isSubsetSum(vector<int> arr, int sum)
-{
-    int n = arr.size();
-    vector<vector<int>> dp(n, vector<int>(sum + 1, -1));
-
-    return helper(arr, sum, n - 1, dp);
-}
-
-bool helper(vector<int> &arr, int sum, int index, vector<vector<int>> &dp)
-{
-    // basecase
-    if (sum == 0)
-        return true;
-    if (index == 0)
-    {
-        if (sum == arr[0])
-        {
+        // base case
+        if (index == nums.size())
+            return false;
+        if (target == 0)
             return true;
+        if (target < 0)
+            return false;
+
+        if (dp[index][target] != -1)
+        {
+            return dp[index][target];
         }
-        return false;
+
+        bool pick = false;
+        bool not_pick = false;
+
+        // pick
+        if (target > 0)
+            pick = helper(target - nums[index], nums, index + 1, dp);
+
+        // not pick
+        not_pick = helper(target, nums, index + 1, dp);
+
+        dp[index][target] = pick || not_pick;
+
+        return dp[index][target];
     }
 
-    if (dp[index][sum] != -1)
-        return dp[index][sum];
-    // take
-    bool take = false;
-    if (arr[index] <= sum)
-        take = helper(arr, sum - arr[index], index - 1, dp);
-    // not take
-    bool notTake = false;
-    notTake = helper(arr, sum, index - 1, dp);
-    return dp[index][sum] = take || notTake;
-}
+    bool canPartition(vector<int> &nums)
+    {
+        // sub set partiation
+        // find set with partiation /2
+        int sum = 0;
+        for (auto &x : nums)
+        {
+            sum += x;
+        }
+
+        if (sum % 2 != 0)
+            return false;
+
+        int target = sum / 2;
+        int n = nums.size();
+
+        // dp[i][j] represents whether there's a subset of nums[0..i] that can add up to j
+        vector<vector<int>> dp(n, vector<int>(target + 1, -1));
+
+        return helper(target, nums, 0, dp);
+    }
 };
