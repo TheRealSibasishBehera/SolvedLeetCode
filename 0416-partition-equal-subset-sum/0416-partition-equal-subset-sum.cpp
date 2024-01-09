@@ -1,40 +1,10 @@
 class Solution
 {
 public:
-    bool helper(int target, vector<int> &nums, int index, vector<vector<int>> &dp)
-    {
-        // base case
-        if (index < 0)
-            return false;
-        if (target == 0)
-            return true;
-        if (target < 0)
-            return false;
-
-        if (dp[index][target] != -1)
-        {
-            return dp[index][target];
-        }
-
-        bool pick = false;
-        bool not_pick = false;
-
-        // pick
-        if (target > 0)
-            pick = helper(target - nums[index], nums, index - 1, dp);
-
-        // not pick
-        not_pick = helper(target, nums, index - 1, dp);
-
-        dp[index][target] = pick || not_pick;
-
-        return dp[index][target];
-    }
-
     bool canPartition(vector<int> &nums)
     {
-        // sub set partiation
-        // find set with partiation /2
+        // sub set partition
+        // find set with partition /2
         int sum = 0;
         for (auto &x : nums)
         {
@@ -48,8 +18,36 @@ public:
         int n = nums.size();
 
         // dp[i][j] represents whether there's a subset of nums[0..i] that can add up to j
-        vector<vector<int>> dp(n, vector<int>(target + 1, -1));
+        vector<vector<int>> dp(n + 1, vector<int>(target + 1, -1));
 
-        return helper(target, nums, nums.size() - 1, dp);
+        // base condition
+        // if target == 0 return true
+        for (int i = 0; i <= n; i++)
+        {
+            dp[i][0] = 1;
+        }
+
+        // for index <0 we have to return 0
+        for (int t = 0; t <= target; t++)
+        {
+            dp[0][t] = 0;
+        }
+
+        for (int i = 1; i <= n; i++)
+        {
+            for (int j = 1; j <= target; j++)
+            {
+                bool x = false, y = false;
+
+                if (j - nums[i - 1] >= 0)
+                    x = dp[i - 1][j - nums[i - 1]];
+
+                y = dp[i - 1][j];
+
+                dp[i][j] = x || y;
+            }
+        }
+
+        return dp[n][target];
     }
 };
