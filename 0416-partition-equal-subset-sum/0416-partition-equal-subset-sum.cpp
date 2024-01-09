@@ -4,7 +4,7 @@ public:
     bool helper(int target, vector<int> &nums, int index, vector<vector<int>> &dp)
     {
         // base case
-        if (index == nums.size())
+        if (index < 0)
             return false;
         if (target == 0)
             return true;
@@ -21,10 +21,10 @@ public:
 
         // pick
         if (target > 0)
-            pick = helper(target - nums[index], nums, index + 1, dp);
+            pick = helper(target - nums[index], nums, index - 1, dp);
 
         // not pick
-        not_pick = helper(target, nums, index + 1, dp);
+        not_pick = helper(target, nums, index - 1, dp);
 
         dp[index][target] = pick || not_pick;
 
@@ -50,6 +50,6 @@ public:
         // dp[i][j] represents whether there's a subset of nums[0..i] that can add up to j
         vector<vector<int>> dp(n, vector<int>(target + 1, -1));
 
-        return helper(target, nums, 0, dp);
+        return helper(target, nums, nums.size() - 1, dp);
     }
 };
