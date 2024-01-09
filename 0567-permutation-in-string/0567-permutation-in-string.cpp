@@ -1,45 +1,50 @@
-class Solution {
+class Solution
+{
 public:
-    bool checkInclusion(std::string s1, std::string s2) {
-        std::vector<int> count(26, 0); // Assuming only lowercase English letters
-
-        for (auto &x : s1) {
-            count[x - 'a']++;
+    bool checkInclusion(string s1, string s2)
+    {
+        int m = s1.size();
+        int n = s2.size();
+        if (m > n)
+        {
+            return false;
         }
 
-        std::vector<int> copy = count;
-        int windowSize = s1.size();
-        int i = 0, j = 0;
 
-        while (j < s2.size()) {
-            if (countEmpty(count)) {
-                // std::cout << i << " " << s2[i] << " " << s2[i] << " " << j << std::endl;
+        //hash set to keep count
+        vector<int> count(26);
+
+        //for both 
+        for (int i = 0; i < m; i++)
+        {
+            count[s1[i] - 'a']++;
+            count[s2[i] - 'a']--;
+        }
+        if (isPermutation(count))
+        {
+            return true;
+        }
+
+        for (int i = m; i < n; i++)
+        {
+            count[s2[i] - 'a']--;
+            count[s2[i - m] - 'a']++;
+            if (isPermutation(count))
+            {
                 return true;
             }
-
-            // Check if s2[j] is a valid lowercase English letter
-            if (s2[j] >= 'a' && s2[j] <= 'z') {
-                // if not found, reset the window by keeping count as copy again and moving to the next character
-                if (count[s2[j] - 'a'] == 0) {
-                    count = copy;
-                    i = j = i + 1;
-                } else {
-                    count[s2[j] - 'a']--;
-                    j++;
-                }
-            } else {
-                // If s2[j] is not a valid lowercase English letter, move to the next character
-                j++;
-            }
         }
 
-        return countEmpty(count);
+        return false;
     }
 
 private:
-    bool countEmpty(const std::vector<int>& count) {
-        for (int c : count) {
-            if (c != 0) {
+    bool isPermutation(vector<int> &count)
+    {
+        for (int i = 0; i < 26; i++)
+        {
+            if (count[i] != 0)
+            {
                 return false;
             }
         }
