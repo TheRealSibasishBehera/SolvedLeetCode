@@ -1,46 +1,40 @@
-class MinStack {
-    std::vector<int> st;
-    std::vector<int> minStack;
+#include <vector>
 
+class MinStack {
 public:
-    MinStack() {}
+    std::vector<int> st;
+    std::vector<int> minst;
+
+    MinStack() {
+    }
 
     void push(int val) {
         st.push_back(val);
 
-        if (minStack.empty() || val <= minStack.back()) {
-            minStack.push_back(val);
+        if (minst.empty() || val <= minst.back()) {
+            minst.push_back(val);
         }
     }
 
     void pop() {
-        if (!st.empty()) {
-            if (st.back() == minStack.back()) {
-                minStack.pop_back();
+            if (st.back() == minst.back()) {
+                minst.pop_back();
             }
             st.pop_back();
-        }
     }
 
     int top() {
-        if (!st.empty()) {
             return st.back();
-        }
-        return -1;  // Handle the case when the stack is empty
     }
 
     int getMin() {
-        if (!minStack.empty()) {
-            return minStack.back();
-        }
-        return -1;  // Handle the case when the stack is empty
+        return minst.back();
     }
+    
+    
+    // thing its working is bcuz its a stack 
+    // if we are having a x , y  , z with  x<y<z , only x is on the min stack
+    // u might be thinking what if we pop , thing is if we pop it will be the last
+    // ifx>y>z min st would be x y z 
+    // we have all ele
 };
-/**
- * Your MinStack object will be instantiated and called as such:
- * MinStack* obj = new MinStack();
- * obj->push(val);
- * obj->pop();
- * int param_3 = obj->top();
- * int param_4 = obj->getMin();
- */
