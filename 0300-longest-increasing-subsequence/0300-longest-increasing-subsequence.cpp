@@ -1,45 +1,32 @@
 class Solution
 {
 public:
-    int helper(int lastIdx, vector<int> &nums, int index, vector<vector<int>> &dp)
+    // in this problem if u want to use the > sign u have to start from o going over to the endq
+    int helper(int last, int index, vector<int> &nums, vector<vector<int>> &dp)
     {
         // base case
         if (index == nums.size())
         {
             return 0;
         }
-
-        if (dp[index][lastIdx+1] != -1)
+        int take = INT_MIN, not_take = INT_MIN;
+        if (dp[last + 1][index] != -1)
         {
-            return dp[index][lastIdx+1];
+            return dp[last + 1][index];
         }
 
-        int pick = 0, notPick = 0;
-
-        // not pick
-        notPick = helper(lastIdx, nums, index + 1, dp);
-
-        // pick
-        if (lastIdx == -1 || nums[index] > nums[lastIdx])
+        if (last==-1 || nums[index] > nums[last] )
         {
-            pick = 1 + helper(index, nums, index + 1, dp);
+            take = 1 + helper(index, index + 1, nums, dp);
         }
+        not_take = helper(last, index + 1, nums, dp);
+        // 2 cases u can take and not take
+        return dp[last + 1][index] = max(take, not_take);
 
-        // maximum of pick and not pick
-        int result = max(pick, notPick);
-        return dp[index][lastIdx+1] = result;
     }
-
     int lengthOfLIS(vector<int> &nums)
     {
-        int n = nums.size();
-        if (n == 0)
-        {
-            return 0;
-        }
-
-        vector<vector<int>> dp(n+1, vector<int>(n, -1));
-
-        return helper(-1, nums, 0, dp);
+        vector<vector<int>> dp(nums.size(), vector<int>(nums.size(), -1));
+        return helper(-1, 0, nums, dp);
     }
 };
