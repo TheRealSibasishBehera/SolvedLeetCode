@@ -1,59 +1,68 @@
-class Solution {
-	public:
-	    int orangesRotting(vector<vector<int>>& grid) {
-	        int n = grid.size();
-	        int m = grid[0].size();
-	        int count=0;
-	        queue<pair<pair<int,int>,int>> q;
-	        for (int i = 0; i < n; ++i)
-	        {
-	        	for (int j = 0; j < m; ++j)
-	        	{
-	        		if(grid[i][j]!=0) count++;
-	        		if(grid[i][j]==2) q.push({{i,j},0});
-	        	}
-	        }
+class Solution
+{
+public:
+    int orangesRotting(vector<vector<int>> &grid)
+    {
 
-	        int delx[]={-1,0,1,0};
-	        int dely[]={0,-1,0,1};
-	        int tmax=0;
-	        while(!q.empty()){
-                
-	        	int x = q.front().first.first;
-	        	int y = q.front().first.second;
-	        	int t = q.front().second;
-                
+        int m = grid.size();
+        int n = grid[0].size();
+        queue<pair<int, int>> q;
+        vector<vector<int>> visited(m, vector<int>(n, 0));
+        int old_rotten = 0, new_rotten = 0;
+        int fresh = 0;
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (grid[i][j] == 1)
+                {
+                    fresh++;
+                }
+                else if (grid[i][j] == 2)
+                {
+                    // FILL THE QUE WITH ALL 2s INITIALLY
+                    q.push({i, j});
+                }
+            }
+        }
+
+        int time = 0;
+        vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+        while (!q.empty())
+        {
+            int s = q.size();
+
+            for (int k = 0; k < s; k++)
+            {
+                int x = q.front().first;
+                int y = q.front().second;
                 q.pop();
 
-	        	for (int i = 0; i < 4; ++i)
-	        	{
-	        		int nx=x+delx[i];
-	        		int ny=y+dely[i];
+                for (const auto &dir : directions)
+                {
+                    int newX = x + dir.first;
+                    int newY = y + dir.second;
+                    if (newX >= 0 && newX < m && newY >= 0 && newY < n && grid[newX][newY] == 1)
+                    {
+                        // visited[newX][newY] = 1;
+                        grid[newX][newY] = 2;
+                        q.push({newX, newY});
+                        fresh--;
+                    }
+                }
+            }
 
-	        		if (nx>=0 && ny>=0 && nx<n && ny<m )
-	        		{
-	        			if ( grid[nx][ny]==1)
-	        			{
-	        				tmax=max(tmax,t+1);
-	        				q.push({{nx,ny},t+1});
-	        				grid[nx][ny]=2;
-	        			}
-	        		}
-	        	}
-
-	        }
-
-	        int g_count=0;
-	        // int max_time=0;
-for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < m; ++j) {
-        if (grid[i][j] == 2) g_count++;
-        // if(grid[i][j]==0) q.push({i,j},0);
+            if (!q.empty())
+            {
+                time++; // Increment time only if there are more oranges to rot
+            }
+        }
+        // cout << new_rotten << " " << old_rotten << endl;
+        if (fresh == 0)
+        {
+            return time;
+        }
+        return -1;
     }
-}
-
-
-if (count == g_count) return tmax;
-	        return -1;
-	    }
-	};
+};
