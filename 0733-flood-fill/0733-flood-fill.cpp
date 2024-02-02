@@ -1,61 +1,41 @@
-#include <bits/stdc++.h>
-using namespace std;
+
 class Solution
 {
 public:
-    vector<vector<int>> floodFill(vector<vector<int>> &grid, int sr, int sc, int color)
+    int m = 0;
+    int n = 0;
+    int start = 0;
+   vector<std::pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    void dfs(vector<vector<int>> &grid, int x, int y, int color)
     {
-        if(grid[sr][sc]==color) return grid;
-        int n = grid.size();
-        int m = grid[0].size();
-        int count = 0;
-        int start=0;
-        queue<pair<int, int>> q;
-        for (int i = 0; i < n; ++i)
+        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != start || grid[x][y] == color)
         {
-            for (int j = 0; j < m; ++j)
-            {
-                // if (grid[i][j] != 0)
-                    // count++;
-                if (sr==i && sc==j)
-                {
-                    start=grid[i][j];
-                    grid[i][j]=color;
-                    q.push({i, j});
-                }
-            }
+            return;
         }
 
-        int delx[] = {-1, 0, 1, 0};
-        int dely[] = {0, -1, 0, 1};
-        int tmax = 0;
-        while (!q.empty())
+        grid[x][y] = color;
+
+        for (const auto &dir : directions)
         {
-            // printGrid(grid);
+            int newX = x + dir.first;
+            int newY = y + dir.second;
+            dfs(grid, newX, newY, color);
+        }
+    }
 
-            int x = q.front().first;
-            int y = q.front().second;
-            // int t = q.front().second;
-            // cout<<x<<","<<y<<endl;
-            q.pop();
+   vector<vector<int>> floodFill(vector<vector<int>> &grid, int sr, int sc, int color)
+    {
+        m = grid.size();
+        n = grid[0].size();
+        start = grid[sr][sc];
 
-            for (int i = 0; i < 4; ++i)
-            {
-                int nx = x + delx[i];
-                int ny = y + dely[i];
-
-                if (nx >= 0 && ny >= 0 && nx < n && ny < m)
-                {
-                    if (grid[nx][ny] == start)
-                    {
-                        // tmax = max(tmax, t + 1);
-                        q.push({nx, ny});
-                        grid[nx][ny] = color;
-                    }
-                }
-            }
+        if (start == color)
+        {
+            return grid;
         }
 
+        dfs(grid, sr, sc, color);
         return grid;
     }
 };
