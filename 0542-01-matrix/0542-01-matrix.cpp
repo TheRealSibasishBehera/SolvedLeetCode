@@ -1,44 +1,61 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
+class Solution
+{
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-        int n = mat.size();
-        int m = mat[0].size();
-        queue<pair<int, int>> q;
-        vector<vector<int>> distance(n, vector<int>(m, -1)); // Initialize with -1
+    vector<vector<int>> updateMatrix(vector<vector<int>> &grid)
+    {
 
-        // Initialize the queue with 0 cells and set distance to 0
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (mat[i][j] == 0) {
+        int m = grid.size();
+        int n = grid[0].size();
+
+        vector<vector<int>> visited(m, vector<int>(n, -1));
+
+        // soln need nearest 0s for every 1s
+        // shud use bfs
+        queue<pair<int, int>> q;
+        int distance = 0;
+
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+
+                if (grid[i][j] == 0)
+                {
+                    // FILL THE QUE WITH ALL 1s INITIALLY
                     q.push({i, j});
-                    distance[i][j] = 0;
+                    visited[i][j] = 0;
                 }
             }
         }
+        vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-        int delx[] = {-1, 0, 1, 0};
-        int dely[] = {0, -1, 0, 1};
-        while (!q.empty()) {
-            int x = q.front().first;
-            int y = q.front().second;
-            q.pop();
+        distance = 1;
+        // do bfs
+        while (!q.empty())
+        {
+            int s = q.size();
 
-            for (int i = 0; i < 4; ++i) {
-                int nx = x + delx[i];
-                int ny = y + dely[i];
+            for (int k = 0; k < s; k++)
+            {
+                int x = q.front().first;
+                int y = q.front().second;
+                q.pop();
 
-                if (nx >= 0 && ny >= 0 && nx < n && ny < m) {
-                    if (distance[nx][ny] == -1) { // Check if not visited
-                        q.push({nx, ny});
-                        distance[nx][ny] = distance[x][y] + 1;
+                for (const auto &dir : directions)
+                {
+                    int newX = x + dir.first;
+                    int newY = y + dir.second;
+                    if (newX >= 0 && newX < m && newY >= 0 && newY < n && visited[newX][newY] == -1)
+                    {
+                        visited[newX][newY] = distance;
+                        q.push({newX, newY});
                     }
                 }
             }
+
+            distance++;
         }
 
-        return distance;
+        return visited;
     }
 };
